@@ -1,1 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Comfortaa:wght@300..700&family=Goldman:wght@400;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Rubik+Glitch&family=Science+Gothic:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Caveat:wght@400..700&family=Comfortaa:wght@300..700&family=Goldman:wght@400;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Rubik+Glitch&family=Science+Gothic:wght@100..900&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Comfortaa", sans-serif;
+}
+
+.caveat{
+  font-family: 'Caveat', sans-serif;
+}
+
+:root {
+  user-select: none;
+  --nav-height: 148px;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar{
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track{
+  background-color: oklch(89.7% 0.196 126.665);
+  border-radius: 2.5px;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: oklch(53.2% 0.157 131.589);
+  border-radius: 2.5px;
+}
