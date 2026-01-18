@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../Backend/supabase"
+import isAuth from '../Backend/isAuth.js'
 
 
 export default function LogIn() {
@@ -11,6 +12,12 @@ export default function LogIn() {
     const [inProgress, setInProgress] = useState(false)
     const navigate = useNavigate()
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    useEffect(()=>{
+        if(isAuth()){
+            navigate('/profilepage')
+        }
+    },[])
 
     async function LogIn() {
         try {

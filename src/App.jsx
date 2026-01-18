@@ -5,7 +5,7 @@ import LogIn from "./Pages/LogIn"
 import SignUp from "./Pages/SignUp"
 import ProfilePage from "./Pages/ProfilePage"
 import { useEffect, useState } from "react"
-import supabase from './Backend/supabase.js'
+import isAuth from './Backend/isAuth.js'
 
 function App() {
   const navigate = useNavigate()
@@ -13,19 +13,12 @@ function App() {
   const [isSignedIn, setIsSignedIn] = useState(false)
 
   useEffect(() => {
-    async function getSession() {
-      const { data, error } = await supabase.auth.getSession()
-
-      if (data?.session) {
-        setIsSignedIn(true)
-      }
-    }
-    getSession()
+    setIsSignedIn(isAuth())
   }, [address])
 
   return (
     <>
-      <div className="w-screen h-28 bg-lime-900 z-10 flex items-center p-3 fixed top-0">
+      <div className="w-screen h-28 bg-lime-900 z-10 flex items-center p-3 fixed top-0 shadow-2xl">
         <img onClick={() => { navigate('/') }} className="h-22 cursor-pointer" src="/images/nutri-bg-logo.png" />
         <div className="w-full flex justify-end items-center space-x-8">
           <div className="flex items-center cursor-pointer transition-all hover:scale-110 ease-in-out hover:brightness-80 space-x-1">
