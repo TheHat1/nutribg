@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 export default function WelcomePage() {
-    const [img, setImg] = useState('')
-    const [CSS, setCSS] = useState('')
+    const [img, setImg] = useState('/')
+    const [CSS, setCSS] = useState('/')
     const br = useRef(0)
     const imgs = ['/images/bg-img1.jpg','/images/bg-img2.jpg','/images/bg-img3.jpg']
     const footerRef = useRef()
@@ -36,11 +36,11 @@ export default function WelcomePage() {
             <div className="fixed inset-0 -z-10">
                 <img className={`w-screen h-screen object-cover pointer-events-none ${CSS}`} src={img} />
             </div>
-            <div className="w-screen h-screen overflow-y-auto overflow-x-hidden pt-37">
+            <div className="w-screen h-screen overflow-y-auto overflow-x-hidden pt-28">
                 <div className="w-screen h-[calc(100vh-var(--nav-height))] bg-emerald-900/40 backdrop-blur-xs flex justify-center items-center p-15">
                     <div className="flex justify-center flex-col items-center">
                         <h1 className="text-5xl font-display text-white font-bold text-center">Здравето започва от храната.</h1>
-                        <h1 className="text-5xl text-white caveat">Nutri BG</h1>
+                        <h1 className="text-7xl text-white caveat">Nutri BG</h1>
                         <div className="flex justify-between space-x-10 mt-6">
                             <div onClick={() => {
                                 navigate('/recipes')
