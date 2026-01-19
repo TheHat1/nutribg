@@ -9,20 +9,23 @@ export default function SignUp() {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [username, setUsername] = useState()
-    const [inProgress, setInProgress] = useState(false)
+    const [inprogress, setInProgress] = useState(false)
     const navigate = useNavigate()
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    useEffect(()=>{
-        if(isAuth()){
-            navigate('/profilepage')
+    useEffect(() => {
+        async function func() {
+            if (await !isAuth()) {
+                navigate('/profilepage')
+            }
         }
-    },[])
+        func()
+    }, [])
 
     async function SignUp() {
         try {
             setInProgress(true)
-            if (email == undefined || password == undefined || username.trim() == undefined) {
+            if (email == undefined || password == undefined || username == undefined) {
                 setErrorSignUp(true)
                 setErrMsg("Има празни полета!")
                 setInProgress(false)
@@ -63,6 +66,11 @@ export default function SignUp() {
 
     return (
         <>
+            <div className={`w-screen h-screen bg-black/25 backdrop-blur-md absolute top-0 transition-all flex justify-center items-center
+                ${inprogress ? "z-50 opacity-100" : "-z-50 opacity-0"}`}>
+                <img className={`animate-spin h-15 invert ${inprogress ? "z-50 opacity-100" : "-z-50 opacity-0"}`} src="/images/loading.png" />
+            </div>
+
             <div className="w-screen h-screen flex justify-center pt-40">
                 <div className="bg-white w-[90vw] max-w-200 min-h-100 h-fit rounded-lg flex items-center p-10 flex-col space-y-3">
                     <h1 className="text-black font-display text-2xl font-bold">Създаване на профил</h1>

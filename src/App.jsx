@@ -13,7 +13,10 @@ function App() {
   const [isSignedIn, setIsSignedIn] = useState(false)
 
   useEffect(() => {
-    setIsSignedIn(isAuth())
+    async function func(){
+      setIsSignedIn(await isAuth())
+    }
+    func()
   }, [address])
 
   return (
