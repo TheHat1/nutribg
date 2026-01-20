@@ -267,15 +267,15 @@ export default function ProfilePage() {
                 setTimeout(() => { setShowRecepieAddMsg(false); setRecepieAddMsg('') }, 3000)
             }
 
-            const { data: count } = await supabase.from('recipes').select('id', { count: true })
+            const { data: count } = await supabase.from('recipes').select('id').order('id', {ascending: false}).limit(1).single()
 
-            const { data: listData } = await supabase.storage.from('nutribg').list('recipePictures/' + name + (count.length + 1))
+            const { data: listData } = await supabase.storage.from('nutribg').list('recipePictures/' + name + (count.id))
 
             if (listData.length != 0) {
-                const { } = await supabase.storage.from('nutribg').remove(['recipePictures/' + name + (count.length + 1) + '/' + listData[0].name])
+                const { } = await supabase.storage.from('nutribg').remove(['recipePictures/' + name + (count.id) + '/' + listData[0].name])
             }
 
-            const filePath = "recipePictures/" + name + (count.length + 1) + '/' + recipePic.name.replaceAll(/[^\w.-]/g, "")
+            const filePath = "recipePictures/" + name + (count.id) + '/' + recipePic.name.replaceAll(/[^\w.-]/g, "")
 
             const { data, error: uploadError } = await supabase
                 .storage

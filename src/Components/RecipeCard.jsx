@@ -15,10 +15,12 @@ export default function RecipeCard({ id, name, desc }) {
             }
         }
 
+        const { data: listData, error: listError } = await supabase.storage.from('nutribg').list("recipePictures/" + name + id)
+
         const { data, error} = await supabase.
             storage.
             from('nutribg').
-            createSignedUrl("recipePictures/" + name + id, 60 * 60 * 24)
+            createSignedUrl("recipePictures/" + name + id + '/' + listData[0].name, 60 * 60 * 24)
 
         if(error){
             console.error(error)
