@@ -41,6 +41,8 @@ export default function ProfilePage() {
     const [nutrients, setNutrients] = useState('')
     const [recepieAddMsg, setRecepieAddMsg] = useState('')
     const [showRecepeAddMsg, setShowRecepieAddMsg] = useState(false)
+    const [recipePic, setRecipePic] = useState()
+    const inputRef1 = useRef()
 
     async function getUser() {
         try {
@@ -264,7 +266,32 @@ export default function ProfilePage() {
                 setShowRecepieAddMsg(true)
                 setTimeout(() => { setShowRecepieAddMsg(false); setRecepieAddMsg('') }, 3000)
             }
-            
+
+            const { data: count } = await supabase.from('recipes').select('id', { count: true })
+
+            const { data: listData } = await supabase.storage.from('nutribg').list('recipePictures/' + name + (count.length + 1))
+
+            if (listData.length != 0) {
+                const { } = await supabase.storage.from('nutribg').remove(['recipePictures/' + name + (count.length + 1) + '/' + listData[0].name])
+            }
+
+            const filePath = "recipePictures/" + name + (count.length + 1) + '/' + recipePic.name.replaceAll(/[^\w.-]/g, "")
+
+            const { data, error: uploadError } = await supabase
+                .storage
+                .from('nutribg')
+                .upload(filePath, recipePic, {
+                    upsert: true,
+                    contentType: recipePic.type
+                })
+
+            if (uploadError) {
+                console.error("There was an error: " + JSON.stringify(uploadError, null, 2))
+                return
+            }
+
+            setInprogress(false)
+
         } catch (err) {
             console.error(err)
         }
@@ -494,10 +521,14 @@ export default function ProfilePage() {
                             name="nutrition"
                         />
                     </div>
+                    <div onClick={() => { inputRef1.current.click() }} className="w-full lg:max-w-70 h-15 lg:ml-5 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-105 transition-all cursor-pointer">
+                        Качи снимка
+                        <input ref={inputRef1} type="file" className="absolute hidden" onChange={(e) => { setRecipePic(e.target.files[0]) }} />
+                    </div>
                     <h1 className={`w-full lg:max-w-180 shadow-2xl p-1 rounded-lg transition-all
                             ${showRecepeAddMsg ? "border-2 rounded-lg" : "opacity-0 h-0"}`}>{recepieAddMsg}</h1>
                     <div onClick={AddRecepie}
-                        className="w-full lg:max-w-70 h-15 lg:ml-5 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-110 transition-all cursor-pointer">Добавяне</div>
+                        className="w-full lg:max-w-70 h-15 lg:ml-5 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-105 transition-all cursor-pointer">Добавяне</div>
                 </div>
             </div>
         </>
