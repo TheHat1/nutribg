@@ -7,7 +7,12 @@ export default function RecepiesPage(){
 
     async function FetchRecipes(){
         try {
-            const {data, error} = await supabase.from('recipes').select('*')
+            const {data, error} = await supabase.from('recipes').select('id, name, desc')
+
+            if(error){
+                console.error(error)
+                return
+            }
 
             if(data){
                 setCards([

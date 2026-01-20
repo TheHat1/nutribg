@@ -275,7 +275,7 @@ export default function ProfilePage() {
                 const { } = await supabase.storage.from('nutribg').remove(['recipePictures/' + name + (count.id) + '/' + listData[0].name])
             }
 
-            const filePath = "recipePictures/" + name + (count.id) + '/' + recipePic.name.replaceAll(/[^\w.-]/g, "")
+            const filePath = "recipePictures/" + name.normalize("NFKD").replace(/[^\x00-\x7F]/g, "").replace(/[^a-zA-Z0-9._/-]/g, "_") + (count.id) + '/' + recipePic.name.replaceAll(/[^\w.-]/g, "")
 
             const { data, error: uploadError } = await supabase
                 .storage
@@ -291,6 +291,7 @@ export default function ProfilePage() {
             }
 
             setInprogress(false)
+            alert("Успешно добавена рецепта.")
 
         } catch (err) {
             console.error(err)
@@ -521,6 +522,7 @@ export default function ProfilePage() {
                             name="nutrition"
                         />
                     </div>
+                    <h1 className={`text-xl transition-opacity ${recipePic ? "opacity-100":"opacity-0"}`}>Прикачен файл: {recipePic?.name}</h1>
                     <div onClick={() => { inputRef1.current.click() }} className="w-full lg:max-w-70 h-15 lg:ml-5 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-105 transition-all cursor-pointer">
                         Качи снимка
                         <input ref={inputRef1} type="file" className="absolute hidden" onChange={(e) => { setRecipePic(e.target.files[0]) }} />
