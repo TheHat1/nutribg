@@ -28,6 +28,18 @@ export default function ProfilePage() {
     const [addMSG, setAddMSG] = useState()
     const [displayAddMsg, setDisplayAddMsg] = useState(false)
     const navigate = useNavigate()
+    const textareaRef = useRef()
+    const textareaRef1 = useRef()
+    const textareaRef2 = useRef()
+    const textareaRef3 = useRef()
+
+    const [desc, setDesc] = useState('')
+    const [recepie, setRecepie] = useState('')
+    const [instructions, setInstructions] = useState('')
+    const [category, setCategory] = useState('')
+    const [name, setName] = useState('')
+    const [nutrients, setNutrients] = useState('')
+
 
     async function getUser() {
         try {
@@ -221,6 +233,14 @@ export default function ProfilePage() {
         }
     }
 
+    async function AddRecepie(){
+        try{
+
+        }catch (err){
+            console.error(err)
+        }
+    }
+
     function handleClickOutsideList(e) {
         if (divRef.current && !divRef.current.contains(e.target) && !divRef.current.contains(e.target)) {
             setIsChange(false)
@@ -361,6 +381,93 @@ export default function ProfilePage() {
                     :
                     null
                 }
+                <div className="w-full h-fit bg-white rounded-lg mt-10 flex flex-col md:justify-start justify-center p-5 font-display space-y-3">
+                    <h1 className="text-2xl">Добавяне на рецепта</h1>
+                    <div className="flex items-center space-x-5 w-full">
+                        <h1 className="w-25">Име: </h1>
+                        <input
+                            className="border border-lime-900 bg-emerald-100 w-full max-w-150 h-12.5 rounded-lg transition-transform ease-out duration-150 hover:scale-105 pl-5"
+                            type="text"
+                            placeholder="..."
+                            onChange={e => { setName(e.target.value) }}
+                            value={name}
+                            name="name"
+                        />
+                    </div>
+                    <div className="flex items-center space-x-5 w-full">
+                        <h1 className="w-25">Категория: </h1>
+                        <input
+                            className="border border-lime-900 bg-emerald-100 w-full max-w-150 h-12.5 rounded-lg transition-transform ease-out duration-150 hover:scale-105 pl-5"
+                            type="text"
+                            placeholder="..."
+                            onChange={e => { setCategory(e.target.value) }}
+                            value={category}
+                            name="category"
+                        />
+                    </div>
+                    <div className="flex items-center space-x-5 full">
+                        <h1 className="w-25">Описание: </h1>
+                        <textarea
+                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
+                            ref={textareaRef}
+                            onInput={e => {
+                                setDesc(e.target.value)
+                                textareaRef.current.style.height = "auto"
+                                textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+                            }}
+                            value={desc}
+                            placeholder=". . ."
+                            name="description"
+                        />
+                    </div>
+                    <div className="flex items-center space-x-5 full">
+                        <h1 className="w-25">Съставки: </h1>
+                        <textarea
+                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
+                            ref={textareaRef1}
+                            onInput={e => {
+                                setRecepie(e.target.value)
+                                textareaRef1.current.style.height = "auto"
+                                textareaRef1.current.style.height = `${textareaRef1.current.scrollHeight}px`
+                            }}
+                            value={recepie}
+                            placeholder=". . ."
+                            name="ingredients"
+                        />
+                    </div>
+                    <div className="flex items-center space-x-5 full">
+                        <h1 className="w-25">Инструкции: </h1>
+                        <textarea
+                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
+                            ref={textareaRef2}
+                            onInput={e => {
+                                setInstructions(e.target.value)
+                                textareaRef2.current.style.height = "auto"
+                                textareaRef2.current.style.height = `${textareaRef2.current.scrollHeight}px`
+                            }}
+                            value={instructions}
+                            placeholder=". . ."
+                            name="instructions"
+                        />
+                    </div>
+                    <div className="flex items-center space-x-5 full">
+                        <h1 className="wrap-normal w-25">Хранителни стойности: </h1>
+                        <textarea
+                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
+                            ref={textareaRef3}
+                            onInput={e => {
+                                setNutrients(e.target.value)
+                                textareaRef3.current.style.height = "auto"
+                                textareaRef3.current.style.height = `${textareaRef3.current.scrollHeight}px`
+                            }}
+                            value={nutrients}
+                            placeholder=". . ."
+                            name="nutrition"
+                        />
+                    </div>
+                    <div onClick={AddRecepie}
+                    className="w-full lg:max-w-70 h-15 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-110 transition-all cursor-pointer">Добавяне</div>
+                </div>
             </div>
         </>
     )
