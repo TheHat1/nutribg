@@ -39,7 +39,8 @@ export default function ProfilePage() {
     const [category, setCategory] = useState('')
     const [name, setName] = useState('')
     const [nutrients, setNutrients] = useState('')
-
+    const [recepieAddMsg, setRecepieAddMsg] = useState('')
+    const [showRecepeAddMsg, setShowRecepieAddMsg] = useState(false)
 
     async function getUser() {
         try {
@@ -233,10 +234,38 @@ export default function ProfilePage() {
         }
     }
 
-    async function AddRecepie(){
-        try{
+    async function AddRecepie() {
+        try {
+            setInprogress(true)
+            if (name === '' || desc === '' || category === '' || recepie === '' || instructions === '' || nutrients === '') {
+                setInprogress(false)
+                setRecepieAddMsg("Има празни полета.")
+                setShowRecepieAddMsg(true)
+                setTimeout(() => { setShowRecepieAddMsg(false); setRecepieAddMsg('') }, 3000)
+                return
+            }
 
-        }catch (err){
+            let ing = recepie.split('\n')
+            let instr = instructions.split('\n')
+            let nutri = nutrients.split('\n')
+
+            const { error } = await supabase.from('recipes').insert({
+                name: name,
+                category: category,
+                desc: desc,
+                ingredients: ing,
+                instructions: instr,
+                nutrients: nutri
+            })
+
+            if (error) {
+                setInprogress(false)
+                setRecepieAddMsg("Имаше грешка при добавянето.")
+                setShowRecepieAddMsg(true)
+                setTimeout(() => { setShowRecepieAddMsg(false); setRecepieAddMsg('') }, 3000)
+            }
+            
+        } catch (err) {
             console.error(err)
         }
     }
@@ -465,8 +494,10 @@ export default function ProfilePage() {
                             name="nutrition"
                         />
                     </div>
+                    <h1 className={`w-full lg:max-w-180 shadow-2xl p-1 rounded-lg transition-all
+                            ${showRecepeAddMsg ? "border-2 rounded-lg" : "opacity-0 h-0"}`}>{recepieAddMsg}</h1>
                     <div onClick={AddRecepie}
-                    className="w-full lg:max-w-70 h-15 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-110 transition-all cursor-pointer">Добавяне</div>
+                        className="w-full lg:max-w-70 h-15 lg:ml-5 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-110 transition-all cursor-pointer">Добавяне</div>
                 </div>
             </div>
         </>
