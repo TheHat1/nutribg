@@ -34,7 +34,6 @@ export default function FavoritesPage() {
             }
 
             if (data) {
-                console.log(data)
                 const old = [cards, <RecipeCard key={data.id} id={data.id} name={data.name} desc={data.desc}/>]
                 setCards(old)
             }
