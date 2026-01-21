@@ -72,7 +72,7 @@ export default function SignUp() {
             </div>
 
             <div className="w-screen h-screen flex justify-center pt-40">
-                <div className="bg-white w-[90vw] max-w-200 min-h-100 h-fit rounded-lg flex items-center p-10 flex-col space-y-3">
+                <div className="bg-green-100 w-[90vw] max-w-200 min-h-100 h-fit rounded-lg flex items-center p-10 flex-col space-y-3">
                     <h1 className="text-black font-display text-2xl font-bold">Създаване на профил</h1>
                     <div className={`text-lg font-semibold text-red-800 bg-red-200 flex items-center pl-2.5 border-2 rounded-md transition-all duration-300 ease-out 
                         ${errorSignUp ? "w-[90vw] max-w-100 h-12.5 border-red-900" : "max-w-112.5 w-[80vw] border-lime-900"}`}>

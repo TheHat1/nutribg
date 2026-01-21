@@ -5,6 +5,7 @@ import LogIn from "./Pages/LogIn"
 import SignUp from "./Pages/SignUp"
 import ProfilePage from "./Pages/ProfilePage"
 import FavoritesPage from "./Pages/FavoritesPage.jsx"
+import RecipePage from './Pages/RecipePage.jsx'
 import { useEffect, useState } from "react"
 import isAuth from './Backend/isAuth.js'
 
@@ -46,6 +47,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profilepage" element={<ProfilePage />} />
         <Route path="/favorites" element={<FavoritesPage/>}/>
+        <Route path="/recipe/:id" element={<RecipePage />} />
       </Routes>
     </>
   )

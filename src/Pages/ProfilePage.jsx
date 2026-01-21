@@ -353,7 +353,7 @@ export default function ProfilePage() {
             </div>
 
             <div className={`absolute inset-0 flex justify-center ${isChange ? "z-50" : "-z-10"}`}>
-                <div ref={divRef} className={`absolute flex flex-col space-y-5 justify-center items-center overflow-hidden mx-auto p-5 max-w-125 w-[90vw] min-h-63 h-fit bg-white rounded-md z-30 transition-transform duration-300 ease-out 
+                <div ref={divRef} className={`absolute flex flex-col space-y-5 justify-center items-center overflow-hidden mx-auto p-5 max-w-125 w-[90vw] min-h-63 h-fit bg-green-100 rounded-md z-30 transition-transform duration-300 ease-out 
                     ${isChange ? "translate-y-50 lg:translate-y-75" : "-translate-y-52.5 pointer-events-none"}`}>
                     <h1 className="font-robotoMono text-lg px-5 text-center">
                         {msg}
@@ -384,7 +384,7 @@ export default function ProfilePage() {
                         </div>
                     </div>
 
-                    <div className="bg-white w-full max-w-200 h-fit rounded-lg flex items-start p-8 flex-col space-y-3 shadow-2xl">
+                    <div className="bg-green-100 w-full max-w-200 h-fit rounded-lg flex items-start p-8 flex-col space-y-3 shadow-2xl">
                         <div className="text-3xl font-display flex justify-between items-center w-full">
                             {username}
                             <img onClick={() => { setIsChange(!isChange); setMsg('Промени потребителско име'); setErrorChange(false); setErrorMsg('') }}
@@ -410,7 +410,7 @@ export default function ProfilePage() {
                     </div>
                 </div>
                 {isAdmin && isOwner ?
-                    <div className="w-full h-fit bg-white rounded-lg mt-10 flex flex-col items-center md:items-start space-y-10 font-display p-5 shadow-2xl">
+                    <div className="w-full h-fit bg-green-100 rounded-lg mt-10 flex flex-col items-center md:items-start space-y-10 font-display p-5 shadow-2xl">
                         <h1 className="text-2xl md:text-3xl">Добавяне на администратори</h1>
                         <div className="space-y-3 w-fit items-center md:items-start justify-center md:space-x-3 flex flex-col md:flex-row">
                             <div className="flex items-center space-x-5 full">
@@ -434,14 +434,14 @@ export default function ProfilePage() {
                     null
                 }
                 {isAdmin ?
-                    <div className="w-full h-fit bg-white rounded-lg mt-10 flex flex-col space-y-10 font-display p-5 shadow-2xl">
+                    <div className="w-full h-fit bg-green-100 rounded-lg mt-10 flex flex-col space-y-10 font-display p-5 shadow-2xl">
                         <h1 className="text-2xl">Администратори</h1>
                         {admins}
                     </div>
                     :
                     null
                 }
-                <div className="w-full h-fit bg-white rounded-lg mt-10 flex flex-col md:justify-start justify-center p-5 font-display space-y-3">
+                <div className="w-full h-fit bg-green-100 rounded-lg mt-10 flex flex-col md:justify-start justify-center p-5 font-display space-y-3">
                     <h1 className="text-2xl">Добавяне на рецепта</h1>
                     <div className="flex items-center space-x-5 w-full">
                         <h1 className="w-25">Име: </h1>

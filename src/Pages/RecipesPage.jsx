@@ -9,7 +9,7 @@ export default function RecepiesPage() {
 
     async function FetchRecipes() {
         try {
-            const { data, error } = await supabase.from('recipes').select('*')
+            const { data, error } = await supabase.from('recipes').select('*').order('name', {ascending: true})
 
             if (error) {
                 console.error(error)
