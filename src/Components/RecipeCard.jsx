@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import supabase from "../Backend/supabase"
 
 export default function RecipeCard({ id, name, desc }) {
@@ -58,8 +58,8 @@ export default function RecipeCard({ id, name, desc }) {
                     user_id: session.session.user.id,
                     recipe_id: id
                 })
-            }else{
-                const {} = await supabase.from('user_favorites').delete().eq('user_id', session.session.user.id).eq('recipe_id', id)
+            } else {
+                const { } = await supabase.from('user_favorites').delete().eq('user_id', session.session.user.id).eq('recipe_id', id)
             }
 
             CheckFavorite()
@@ -68,13 +68,15 @@ export default function RecipeCard({ id, name, desc }) {
         }
     }
 
-    fetchPicture()
-    CheckFavorite()
+    useEffect(() => {
+        fetchPicture()
+        CheckFavorite()
+    }, [])
 
     return (
         <>
             <div className="w-90 font-display h-115 rounded-lg shadow-2xl bg-lime-100 border transition-all hover:scale-103 cursor-pointer">
-                <img className="w-full h-60 rounded-t-lg shadow-2xl" src={img} />
+                <img loading="lazy" className="w-full h-60 rounded-t-lg shadow-2xl" src={img} />
                 <div className="flex border-t w-full justify-between items-center pr-3">
                     <h1 className="p-3 text-xl">{name}</h1>
                     <img onClick={handleFavorite} className="h-10 hover:scale-110 transition-all" src={isFavorite ? "/images/bookmark.png" : "/images/bookmark-empty.png"} />
