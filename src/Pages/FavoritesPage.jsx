@@ -26,7 +26,7 @@ export default function FavoritesPage() {
 
     async function fetchRecipeInfo(id) {
         try {
-            const { data, error } = await supabase.from('recipes').select('id, name, desc').eq('id', id).single()
+            const { data, error } = await supabase.from('recipes').select('id, name, nutrients').eq('id', id).single()
 
             if (error) {
                 console.error(error)
@@ -34,7 +34,7 @@ export default function FavoritesPage() {
             }
 
             if (data) {
-                const old = [cards, <RecipeCard key={data.id} id={data.id} name={data.name} desc={data.desc}/>]
+                const old = [cards, <RecipeCard key={data.id} id={data.id} name={data.name} nutrients={data.nutrients}/>]
                 setCards(old)
             }
         } catch (error) {

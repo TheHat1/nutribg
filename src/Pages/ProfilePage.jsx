@@ -33,7 +33,6 @@ export default function ProfilePage() {
     const textareaRef2 = useRef()
     const textareaRef3 = useRef()
 
-    const [desc, setDesc] = useState('')
     const [recepie, setRecepie] = useState('')
     const [instructions, setInstructions] = useState('')
     const [category, setCategory] = useState('')
@@ -239,7 +238,7 @@ export default function ProfilePage() {
     async function AddRecepie() {
         try {
             setInprogress(true)
-            if (name === '' || desc === '' || category === '' || recepie === '' || instructions === '' || nutrients === '') {
+            if (name === '' || category === '' || recepie === '' || instructions === '' || nutrients === '') {
                 setInprogress(false)
                 setRecepieAddMsg("Има празни полета.")
                 setShowRecepieAddMsg(true)
@@ -254,7 +253,6 @@ export default function ProfilePage() {
             const { error } = await supabase.from('recipes').insert({
                 name: name,
                 category: category,
-                desc: desc,
                 ingredients: ing,
                 instructions: instr,
                 nutrients: nutri
@@ -292,6 +290,11 @@ export default function ProfilePage() {
 
             setInprogress(false)
             alert("Успешно добавена рецепта.")
+            setRecepie('')
+            setName('')
+            setCategory('')
+            setInstructions('')
+            setNutrients('')
 
         } catch (err) {
             console.error(err)
@@ -460,21 +463,6 @@ export default function ProfilePage() {
                             onChange={e => { setCategory(e.target.value) }}
                             value={category}
                             name="category"
-                        />
-                    </div>
-                    <div className="flex items-center space-x-5 full">
-                        <h1 className="w-25">Описание: </h1>
-                        <textarea
-                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
-                            ref={textareaRef}
-                            onInput={e => {
-                                setDesc(e.target.value)
-                                textareaRef.current.style.height = "auto"
-                                textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
-                            }}
-                            value={desc}
-                            placeholder=". . ."
-                            name="description"
                         />
                     </div>
                     <div className="flex items-center space-x-5 full">

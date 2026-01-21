@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import supabase from "../Backend/supabase"
 
-export default function RecipeCard({ id, name, desc }) {
+export default function RecipeCard({ id, name, nutrients }) {
     const [img, setImg] = useState()
     const [isFavorite, setIsFavorite] = useState(false)
 
@@ -75,13 +75,13 @@ export default function RecipeCard({ id, name, desc }) {
 
     return (
         <>
-            <div className="w-90 font-display h-115 rounded-lg shadow-2xl bg-lime-100 border transition-all hover:scale-103 cursor-pointer">
-                <img loading="lazy" className="w-full h-60 rounded-t-lg shadow-2xl" src={img} />
+            <div className="w-90 font-display h-135 rounded-lg shadow-2xl bg-lime-100 border transition-all hover:scale-103 cursor-pointer">
+                <img loading="lazy" className="w-full h-85 rounded-t-lg shadow-2xl object-cover" src={img} />
                 <div className="flex border-t w-full justify-between items-center pr-3">
                     <h1 className="p-3 text-xl">{name}</h1>
                     <img onClick={handleFavorite} className="h-10 hover:scale-110 transition-all" src={isFavorite ? "/images/bookmark.png" : "/images/bookmark-empty.png"} />
                 </div>
-                <p className="px-3 text-md text-wrap h-32 text-ellipsis mask-b-from-10 overflow-clip">{desc}</p>
+                <p className="px-3 text-md text-wrap h-32 text-ellipsis mask-b-from-10 overflow-clip">{nutrients}</p>
             </div>
         </>
     )

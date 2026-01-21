@@ -8,7 +8,7 @@ export default function RecepiesPage() {
 
     async function FetchRecipes() {
         try {
-            const { data, error } = await supabase.from('recipes').select('id, name, desc')
+            const { data, error } = await supabase.from('recipes').select('id, name, nutrients')
 
             if (error) {
                 console.error(error)
@@ -19,7 +19,7 @@ export default function RecepiesPage() {
                 setCards([
                     data.map((rec) => {
                         return (
-                            <RecipeCard key={rec.id} id={rec.id} name={rec.name} desc={rec.desc} />
+                            <RecipeCard key={rec.id} id={rec.id} name={rec.name} nutrients={rec.nutrients} />
                         )
                     })
                 ])
