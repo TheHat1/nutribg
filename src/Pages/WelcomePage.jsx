@@ -68,14 +68,14 @@ export default function WelcomePage() {
                         Вярваме, че здравето не е временна цел, а дългосрочен процес, започващ от ежедневните решения, които взимаме. Затова се стремим да бъдем надежден източник на информация и подкрепа за всеки, който иска да се грижи по-добре за себе си и своето тяло.
                     </p>
                 </div>
-                <div className="w-screen h-fit min-h-26 bg-stone-950 flex p-1">
+                <footer className="w-screen h-fit min-h-26 bg-stone-950 flex p-1">
                     <div className="w-full h-full flex space-x-15">
 
                     </div>
                     <div className="min-w-80 text-gray-500 font-display text-sm flex items-end">
                         <h1>©Made by TheHatInc™. All rights reserved.</h1>
                     </div>
-                </div>
+                </footer>
             </div>
         </>
     )

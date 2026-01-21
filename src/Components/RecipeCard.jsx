@@ -4,6 +4,7 @@ import supabase from "../Backend/supabase"
 export default function RecipeCard({ id, name, nutrients }) {
     const [img, setImg] = useState()
     const [isFavorite, setIsFavorite] = useState(false)
+    let nut = []
 
     async function fetchPicture() {
         const cacheData = localStorage.getItem("img_cache_" + name + id)
@@ -75,13 +76,13 @@ export default function RecipeCard({ id, name, nutrients }) {
 
     return (
         <>
-            <div className="w-90 font-display h-135 rounded-lg shadow-2xl bg-lime-100 border transition-all hover:scale-103 cursor-pointer">
+            <div className="w-90 font-display h-135 rounded-lg shadow-2xl bg-lime-100 border transition-all hover:scale-103 cursor-pointer shrink-0 m-5">
                 <img loading="lazy" className="w-full h-85 rounded-t-lg shadow-2xl object-cover" src={img} />
                 <div className="flex border-t w-full justify-between items-center pr-3">
-                    <h1 className="p-3 text-xl">{name}</h1>
+                    <h1 className="p-3 text-xl truncate">{name}</h1>
                     <img onClick={handleFavorite} className="h-10 hover:scale-110 transition-all" src={isFavorite ? "/images/bookmark.png" : "/images/bookmark-empty.png"} />
                 </div>
-                <p className="px-3 text-md text-wrap h-32 text-ellipsis mask-b-from-10 overflow-clip">{nutrients}</p>
+                <p className="px-3 text-md text-wrap h-32 text-ellipsis mask-b-from-10 overflow-clip whitespace-pre-line">{nutrients.join('\n')}</p>
             </div>
         </>
     )
