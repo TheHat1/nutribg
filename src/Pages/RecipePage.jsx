@@ -1,18 +1,34 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import supabase from "../Backend/supabase"
+import AddOrEdit from "../Components/RecipeAddEdit"
 
 export default function RecipePage() {
     const { id } = useParams()
     const [img, setImg] = useState()
     const [isFavorite, setIsFavorite] = useState(false)
     const [recipe, setRecipe] = useState()
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    async function isAdminCheck() {
+        try {
+            const { data, error } = await supabase.auth.getSession()
+
+            if (data?.session?.user?.id) {
+
+                const { data: data1, error } = await supabase.from("admins").select("is_owner").eq("user_id", data.session.user.id).maybeSingle()
+                setIsAdmin(!!data1)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     async function fetchPicture() {
         const { data: recipe } = await supabase.from('recipes').select('*').eq('id', id).single()
         setRecipe(recipe)
 
-        const cacheData = localStorage.getItem("img_cache_" + recipe.name + id)
+        const cacheData = localStorage.getItem("img_cache_" + recipe.name.normalize("NFKD").replace(/[^\x00-\x7F]/g, "").replace(/[^a-zA-Z0-9._/-]/g, "_") + id)
 
         if (cacheData) {
             const { url, expiry } = JSON.parse(cacheData)
@@ -45,10 +61,12 @@ export default function RecipePage() {
     async function CheckFavorite() {
         try {
             const { data: session } = await supabase.auth.getSession()
-            const { data, error } = await supabase.from('user_favorites').select('*').eq('user_id', session.session.user.id).eq('recipe_id', id)
+            if (session?.session?.user?.id) {
+                const { data, error } = await supabase.from('user_favorites').select('*').eq('user_id', session?.session?.user?.id).eq('recipe_id', id)
 
-            if (data) {
-                setIsFavorite(data.length > 0)
+                if (data) {
+                    setIsFavorite(data.length > 0)
+                }
             }
         } catch (error) {
             console.error(error)
@@ -77,12 +95,13 @@ export default function RecipePage() {
     useEffect(() => {
         fetchPicture()
         CheckFavorite()
+        isAdminCheck()
     }, [])
 
     return (
         <>
             <div className="w-screen h-screen overflow-y-auto p-7 pt-35 space-y-5">
-                <div className="w-full h-70 flex flex-col md:flex-row items-center shadow-2xl bg-green-100 rounded-lg pt-7 md:pt-0">
+                <div className="w-full h-fit md:h-70 flex flex-col md:flex-row items-center shadow-2xl bg-green-100 rounded-lg pt-7 md:pt-0">
                     <img loading="lazy" className="rounded-lg border-b md:rounded-none shadow-2xl md:rounded-l-lg md:border-r md:h-full object-cover" src={img} />
                     <div className="w-full h-full bg-green-100 flex flex-col space-y-3 font-display whitespace-pre-line p-7 md:rounded-r-lg md:rounded-none rounded-b-lg">
                         <h1 className="text-3xl">{recipe?.name}</h1>
@@ -95,6 +114,11 @@ export default function RecipePage() {
                     <h1 className="text-2xl font-bold">Начин на приготвяне: </h1>
                     <p className="pl-5 text-xl">{recipe?.instructions?.join('\n')}</p>
                 </div>
+                {isAdmin ?
+                    <RecipeAddOrEdit r={''} i={[]} c={''} n={''} nut={''} isInAddMode={true} id={''} />
+                    :
+                    null
+                }
             </div>
         </>
     )

@@ -40,8 +40,8 @@ export default function RecepiesPage() {
         const timer = setTimeout(() => {
             let searchInput = search.toString().toLowerCase().replaceAll(' ', '')
             let searchResult
-            if (search != " ") {
-                searchResult = recipes.filter((e) => {
+            if (search != " " && recipes) {
+                searchResult = recipes?.filter((e) => {
                     return (
                         e.name.toString().toLowerCase().replaceAll(' ', '').includes(searchInput) ||
                         e.category.toString().toLowerCase().replaceAll(' ', '').includes(searchInput)

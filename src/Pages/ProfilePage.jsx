@@ -4,6 +4,7 @@ import fetchPFP from "../Backend/fetchPFP"
 import supabase from "../Backend/supabase"
 import { useNavigate } from "react-router-dom"
 import AdminCard from "../Components/AdminCard"
+import RecipeAddOrEdit from '../Components/RecipeAddEdit'
 
 export default function ProfilePage() {
     const [username, setUsername] = useState()
@@ -28,20 +29,6 @@ export default function ProfilePage() {
     const [addMSG, setAddMSG] = useState()
     const [displayAddMsg, setDisplayAddMsg] = useState(false)
     const navigate = useNavigate()
-    const textareaRef = useRef()
-    const textareaRef1 = useRef()
-    const textareaRef2 = useRef()
-    const textareaRef3 = useRef()
-
-    const [recepie, setRecepie] = useState('')
-    const [instructions, setInstructions] = useState('')
-    const [category, setCategory] = useState('')
-    const [name, setName] = useState('')
-    const [nutrients, setNutrients] = useState('')
-    const [recepieAddMsg, setRecepieAddMsg] = useState('')
-    const [showRecepeAddMsg, setShowRecepieAddMsg] = useState(false)
-    const [recipePic, setRecipePic] = useState()
-    const inputRef1 = useRef()
 
     async function getUser() {
         try {
@@ -54,7 +41,7 @@ export default function ProfilePage() {
                 setDateCreated(data.session.user.created_at)
                 setUserid(data.session.user.id)
 
-                const { data: data1, error } = await supabase.from("admins").select("is_owner").eq("user_id", data.session.user.id).maybeSingle()
+                const { data: data1, error } = await supabase.from("admins").select("is_owner").eq("user_id", data?.session?.user?.id).maybeSingle()
                 setIsOwner(data1.is_owner)
                 setIsAdmin(!!data1)
 
@@ -235,72 +222,6 @@ export default function ProfilePage() {
         }
     }
 
-    async function AddRecepie() {
-        try {
-            setInprogress(true)
-            if (name === '' || category === '' || recepie === '' || instructions === '' || nutrients === '') {
-                setInprogress(false)
-                setRecepieAddMsg("Има празни полета.")
-                setShowRecepieAddMsg(true)
-                setTimeout(() => { setShowRecepieAddMsg(false); setRecepieAddMsg('') }, 3000)
-                return
-            }
-
-            let ing = recepie.split('\n')
-            let instr = instructions.split('\n')
-            let nutri = nutrients.split('\n')
-
-            const { error } = await supabase.from('recipes').insert({
-                name: name,
-                category: category,
-                ingredients: ing,
-                instructions: instr,
-                nutrients: nutri
-            })
-
-            if (error) {
-                setInprogress(false)
-                setRecepieAddMsg("Имаше грешка при добавянето.")
-                setShowRecepieAddMsg(true)
-                setTimeout(() => { setShowRecepieAddMsg(false); setRecepieAddMsg('') }, 3000)
-            }
-
-            const { data: count } = await supabase.from('recipes').select('id').order('id', {ascending: false}).limit(1).single()
-
-            const { data: listData } = await supabase.storage.from('nutribg').list('recipePictures/' + name + (count.id))
-
-            if (listData.length != 0) {
-                const { } = await supabase.storage.from('nutribg').remove(['recipePictures/' + name + (count.id) + '/' + listData[0].name])
-            }
-
-            const filePath = "recipePictures/" + name.normalize("NFKD").replace(/[^\x00-\x7F]/g, "").replace(/[^a-zA-Z0-9._/-]/g, "_") + (count.id) + '/' + recipePic.name.replaceAll(/[^\w.-]/g, "")
-
-            const { data, error: uploadError } = await supabase
-                .storage
-                .from('nutribg')
-                .upload(filePath, recipePic, {
-                    upsert: true,
-                    contentType: recipePic.type
-                })
-
-            if (uploadError) {
-                console.error("There was an error: " + JSON.stringify(uploadError, null, 2))
-                return
-            }
-
-            setInprogress(false)
-            alert("Успешно добавена рецепта.")
-            setRecepie('')
-            setName('')
-            setCategory('')
-            setInstructions('')
-            setNutrients('')
-
-        } catch (err) {
-            console.error(err)
-        }
-    }
-
     function handleClickOutsideList(e) {
         if (divRef.current && !divRef.current.contains(e.target) && !divRef.current.contains(e.target)) {
             setIsChange(false)
@@ -309,6 +230,11 @@ export default function ProfilePage() {
 
     function handlePFPupload() {
         inputRef.current.click()
+    }
+
+    function handleInprogressState(e) {
+        setInprogress(e)
+        console.log(e)
     }
 
     async function handleCopyToClipboard() {
@@ -441,85 +367,11 @@ export default function ProfilePage() {
                     :
                     null
                 }
-                <div className="w-full h-fit bg-green-100 rounded-lg mt-10 flex flex-col md:justify-start justify-center p-5 font-display space-y-3">
-                    <h1 className="text-2xl">Добавяне на рецепта</h1>
-                    <div className="flex items-center space-x-5 w-full">
-                        <h1 className="w-25">Име: </h1>
-                        <input
-                            className="border border-lime-900 bg-emerald-100 w-full max-w-150 h-12.5 rounded-lg transition-transform ease-out duration-150 hover:scale-105 pl-5"
-                            type="text"
-                            placeholder="..."
-                            onChange={e => { setName(e.target.value) }}
-                            value={name}
-                            name="name"
-                        />
-                    </div>
-                    <div className="flex items-center space-x-5 w-full">
-                        <h1 className="w-25">Категория: </h1>
-                        <input
-                            className="border border-lime-900 bg-emerald-100 w-full max-w-150 h-12.5 rounded-lg transition-transform ease-out duration-150 hover:scale-105 pl-5"
-                            type="text"
-                            placeholder="..."
-                            onChange={e => { setCategory(e.target.value) }}
-                            value={category}
-                            name="category"
-                        />
-                    </div>
-                    <div className="flex items-center space-x-5 full">
-                        <h1 className="w-25">Съставки: </h1>
-                        <textarea
-                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
-                            ref={textareaRef1}
-                            onInput={e => {
-                                setRecepie(e.target.value)
-                                textareaRef1.current.style.height = "auto"
-                                textareaRef1.current.style.height = `${textareaRef1.current.scrollHeight}px`
-                            }}
-                            value={recepie}
-                            placeholder=". . ."
-                            name="ingredients"
-                        />
-                    </div>
-                    <div className="flex items-center space-x-5 full">
-                        <h1 className="w-25">Инструкции: </h1>
-                        <textarea
-                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
-                            ref={textareaRef2}
-                            onInput={e => {
-                                setInstructions(e.target.value)
-                                textareaRef2.current.style.height = "auto"
-                                textareaRef2.current.style.height = `${textareaRef2.current.scrollHeight}px`
-                            }}
-                            value={instructions}
-                            placeholder=". . ."
-                            name="instructions"
-                        />
-                    </div>
-                    <div className="flex items-center space-x-5 full">
-                        <h1 className="wrap-normal w-25">Хранителни стойности: </h1>
-                        <textarea
-                            className="w-full max-w-150 min-h-25 pl-5 pt-1 border bg-emerald-100 border-black rounded-md shadow-lg mt-3 overflow-hidden resize-none"
-                            ref={textareaRef3}
-                            onInput={e => {
-                                setNutrients(e.target.value)
-                                textareaRef3.current.style.height = "auto"
-                                textareaRef3.current.style.height = `${textareaRef3.current.scrollHeight}px`
-                            }}
-                            value={nutrients}
-                            placeholder=". . ."
-                            name="nutrition"
-                        />
-                    </div>
-                    <h1 className={`text-xl transition-opacity ${recipePic ? "opacity-100":"opacity-0"}`}>Прикачен файл: {recipePic?.name}</h1>
-                    <div onClick={() => { inputRef1.current.click() }} className="w-full lg:max-w-70 h-15 lg:ml-5 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-105 transition-all cursor-pointer">
-                        Качи снимка
-                        <input ref={inputRef1} type="file" className="absolute hidden" onChange={(e) => { setRecipePic(e.target.files[0]) }} />
-                    </div>
-                    <h1 className={`w-full lg:max-w-180 shadow-2xl p-1 rounded-lg transition-all
-                            ${showRecepeAddMsg ? "border-2 rounded-lg" : "opacity-0 h-0"}`}>{recepieAddMsg}</h1>
-                    <div onClick={AddRecepie}
-                        className="w-full lg:max-w-70 h-15 lg:ml-5 rounded-lg bg-lime-700 text-white text-2xl flex items-center justify-center hover:brightness-125 hover:scale-105 transition-all cursor-pointer">Добавяне</div>
-                </div>
+                {isAdmin ?
+                    <RecipeAddOrEdit r={''} i={''} c={''} n={''} nut={''} isInAddMode={true} id={''} inprogress={setInprogress}/>
+                    :
+                    null
+                }
             </div>
         </>
     )

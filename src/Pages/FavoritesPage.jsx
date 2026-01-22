@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react"
 import supabase from "../Backend/supabase"
 import RecipeCard from "../Components/RecipeCard"
+import isAuth from '../Backend/isAuth'
+import { useLocation, useNavigate } from "react-router-dom"
 
 export default function FavoritesPage() {
     const [cards, setCards] = useState()
     const [search, setSearch] = useState("")
     const [recipes, setRecipes] = useState()
+    const address = useLocation()
+    const [isSignedIn, setIsSignedIn] = useState(false)
+    const navigate = useNavigate()
 
     async function fetchRecipes() {
         try {
@@ -45,11 +50,20 @@ export default function FavoritesPage() {
     }
 
     useEffect(() => {
-        fetchRecipes()
-    }, [])
+        async function func() {
+            setIsSignedIn(await isAuth())
+            if (await isAuth()) {
+                fetchRecipes()
+            }
+        }
+        func()
+    }, [address])
 
     useEffect(() => {
         const timer = setTimeout(() => {
+            if(!isSignedIn){
+                return
+            }
             let searchInput = search.toString().toLowerCase().replaceAll(' ', '')
             let searchResult
             if (search != " ") {
@@ -89,7 +103,12 @@ export default function FavoritesPage() {
                     />
                 </div>
                 <div className="w-screen h-fit min-h-screen flex p-10 flex-wrap justify-center">
-                    {cards}
+                    {isSignedIn?  cards:
+                    <div className="w-full flex justify-center items-center font-display text-white text-4xl flex-col">
+                        <h1>Не сте влезнали във Вашият профил.</h1>
+                        <h1>Направете го <a onClick={()=>{navigate('/login')}} className="text-lime-500 cursor-pointer duration-150 hover:brightness-125 transition-all">тук.</a></h1>
+                    </div>
+                    }
                 </div>
                 <footer className="w-screen h-fit min-h-26 bg-stone-950 flex p-1">
                     <div className="w-full h-full flex space-x-15">
