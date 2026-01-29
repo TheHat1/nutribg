@@ -21,6 +21,11 @@ export default function RecipeCard({ id, name, nutrients }) {
 
         const { data: listData, error: listError } = await supabase.storage.from('nutribg').list("recipePictures/" + name.normalize("NFKD").replace(/[^\x00-\x7F]/g, "").replace(/[^a-zA-Z0-9._/-]/g, "_") + id)
 
+        if(listData?.length===0){
+            setImg('/images/no-image.png')
+            return
+        }
+
         const { data, error } = await supabase.
             storage.
             from('nutribg').

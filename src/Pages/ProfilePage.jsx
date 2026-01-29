@@ -368,7 +368,7 @@ export default function ProfilePage() {
                     null
                 }
                 {isAdmin ?
-                    <RecipeAddOrEdit r={''} i={''} c={''} n={''} nut={''} isInAddMode={true} id={''} inprogress={setInprogress}/>
+                    <RecipeAddOrEdit r={''} i={''} c={''} n={''} nut={''} isInAddMode={true} id={''} handleInprogress={setInprogress}/>
                     :
                     null
                 }
