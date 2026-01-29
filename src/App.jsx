@@ -40,10 +40,10 @@ function App() {
           <img onClick={() => setIsMenuOpen(!isMenuOPen)} className="h-10 invert cursor-pointer ml-auto" src="/images/hamburger.png" />
           <div className={`absolute top-25 left-0 flex flex-col h-40 bg-lime-600 transition-all duration-300 w-full justify-center items-center space-y-4 py-3 
             ${isMenuOPen ? 'visible opacity-100 translate-y-3' : 'opacity-0 invisible'}`}>
-            <div onClick={() => { navigate('/recipes'); setIsMenuOpen(false) }} className="flex items-center cursor-pointer transition-all hover:scale-110 ease-in-out hover:brightness-80 space-x-1">
+            <div onClick={() => { navigate('/recipes'); setIsMenuOpen(false) }} className="w-full flex items-center justify-center border-b border-green-900 cursor-pointer transition-all hover:scale-110 ease-in-out hover:brightness-80 space-x-1">
               <h1 className="text-white text-lg font-display">Рецепти</h1>
             </div>
-            <div onClick={() => { navigate('/favorites'); setIsMenuOpen(false) }} className="flex items-center cursor-pointer transition-all hover:scale-110 ease-in-out hover:brightness-80 space-x-1">
+            <div onClick={() => { navigate('/favorites'); setIsMenuOpen(false) }} className="w-full flex items-center justify-center border-b border-green-900 cursor-pointer transition-all hover:scale-110 ease-in-out hover:brightness-80 space-x-1">
               <h1 className="text-white text-lg font-display">Запазени</h1>
               <img className="h-9 invert" src="/images/bookmark.png" />
             </div>
