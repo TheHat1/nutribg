@@ -63,6 +63,11 @@ export default function RecipeCard({ id, name, nutrients }) {
         try {
             const { data: session } = await supabase.auth.getSession()
 
+            if(!session?.session?.user?.id){
+                navigate('/login')
+                return
+            }
+
             if (!isFavorite) {
                 const { } = await supabase.from('user_favorites').insert({
                     user_id: session?.session?.user?.id,
