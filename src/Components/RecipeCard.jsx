@@ -9,7 +9,7 @@ export default function RecipeCard({ id, name, nutrients }) {
     const navigate = useNavigate()
 
     async function fetchPicture() {
-        const cacheData = localStorage.getItem("img_cache_" + name + id)
+        const cacheData = localStorage.getItem("img_cache_" + name.normalize("NFKD").replace(/[^\x00-\x7F]/g, "").replace(/[^a-zA-Z0-9._/-]/g, "_") + id)
 
         if (cacheData) {
             const { url, expiry } = JSON.parse(cacheData)
@@ -20,6 +20,11 @@ export default function RecipeCard({ id, name, nutrients }) {
         }
 
         const { data: listData, error: listError } = await supabase.storage.from('nutribg').list("recipePictures/" + name.normalize("NFKD").replace(/[^\x00-\x7F]/g, "").replace(/[^a-zA-Z0-9._/-]/g, "_") + id)
+
+        if(listData?.length===0){
+            setImg('/images/no-image.png')
+            return
+        }
 
         const { data, error } = await supabase.
             storage.
@@ -32,20 +37,22 @@ export default function RecipeCard({ id, name, nutrients }) {
         }
 
         localStorage.setItem("img_cache_" + name.normalize("NFKD").replace(/[^\x00-\x7F]/g, "").replace(/[^a-zA-Z0-9._/-]/g, "_") + id, JSON.stringify({
-            url: data.signedUrl,
+            url: data?.signedUrl,
             expiry: Date.now() + 60 * 60 * 24 * 1000
         }))
 
-        setImg(data.signedUrl)
+        setImg(data?.signedUrl)
     }
 
     async function CheckFavorite() {
         try {
             const { data: session } = await supabase.auth.getSession()
-            const { data, error } = await supabase.from('user_favorites').select('*').eq('user_id', session.session.user.id).eq('recipe_id', id)
+            if (session?.session?.user?.id) {
+                const { data, error } = await supabase.from('user_favorites').select('*').eq('user_id', session?.session?.user?.id).eq('recipe_id', id)
 
-            if (data) {
-                setIsFavorite(data.length > 0)
+                if (data) {
+                    setIsFavorite(data.length > 0)
+                }
             }
         } catch (error) {
             console.error(error)
@@ -56,13 +63,18 @@ export default function RecipeCard({ id, name, nutrients }) {
         try {
             const { data: session } = await supabase.auth.getSession()
 
+            if(!session?.session?.user?.id){
+                navigate('/login')
+                return
+            }
+
             if (!isFavorite) {
                 const { } = await supabase.from('user_favorites').insert({
-                    user_id: session.session.user.id,
+                    user_id: session?.session?.user?.id,
                     recipe_id: id
                 })
             } else {
-                const { } = await supabase.from('user_favorites').delete().eq('user_id', session.session.user.id).eq('recipe_id', id)
+                const { } = await supabase.from('user_favorites').delete().eq('user_id', session?.session?.user?.id).eq('recipe_id', id)
             }
 
             CheckFavorite()
@@ -79,12 +91,12 @@ export default function RecipeCard({ id, name, nutrients }) {
     return (
         <>
             <div className="w-90 font-display h-135 rounded-lg shadow-2xl bg-lime-100 border transition-all hover:scale-103 cursor-pointer shrink-0 m-5 ">
-                <img onClick={()=>{navigate('/recipe/' + id)}} loading="lazy" className="w-full h-85 rounded-t-lg shadow-2xl object-cover" src={img} />
+                <img onClick={() => { navigate('/recipe/' + id) }} loading="lazy" className="w-full h-85 rounded-t-lg shadow-2xl object-cover" src={img} />
                 <div className="flex border-t w-full justify-between items-center pr-3">
-                    <h1 onClick={()=>{navigate('/recipe/' + id)}} className="p-3 text-xl truncate">{name}</h1>
+                    <h1 onClick={() => { navigate('/recipe/' + id) }} className="p-3 text-xl truncate">{name}</h1>
                     <img loading="lazy" onClick={handleFavorite} className="h-10 hover:scale-110 transition-all" src={isFavorite ? "/images/bookmark.png" : "/images/bookmark-empty.png"} />
                 </div>
-                <p onClick={()=>{navigate('/recipe/' + id)}} className="px-3 text-md text-wrap h-32 text-ellipsis mask-b-from-10 overflow-clip whitespace-pre-line">{nutrients.join('\n ● ')}</p>
+                <p onClick={() => { navigate('/recipe/' + id) }} className="px-3 text-md text-wrap h-32 text-ellipsis mask-b-from-10 overflow-clip whitespace-pre-line">{nutrients.join('\n ● ')}</p>
             </div>
         </>
     )
