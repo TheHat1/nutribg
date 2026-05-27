@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
 import supabase from "../Backend/supabase"
 import RecipeCard from "../Components/RecipeCard"
+import RecipeCardSkeleton from "../Components/RecipeCardSkeleton"
 
 export default function RecepiesPage() {
-    const [cards, setCards] = useState([])
+    const [cards, setCards] = useState([<RecipeCardSkeleton/>, <RecipeCardSkeleton/>,<RecipeCardSkeleton/>,<RecipeCardSkeleton/>,<RecipeCardSkeleton/>])
     const [search, setSearch] = useState("")
     const [recipes, setRecipes] = useState()
 
     async function FetchRecipes() {
         try {
-            const { data, error } = await supabase.from('recipes').select('*').order('name', {ascending: true})
+            const { data, error } = await supabase.from('recipes').select('*').order('name', { ascending: true })
 
             if (error) {
                 console.error(error)
